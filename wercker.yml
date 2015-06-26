@@ -14,3 +14,24 @@ build:
         - wantedly/pretty-slack-notify:
             webhook_url: $SLACK_WEBHOOK_URL
             channel: $SLACK_CHANNEL
+
+deploy:
+    steps:
+        - wercker/add-ssh-key:
+            keyname: WERCKER_GITHUB
+            host: git
+
+        - script:
+            name: Configure git
+            code: |-
+                git config --global user.email "pleasemailus@wercker.com"
+                git config --global user.name "wercker"
+
+        - script:
+            name: Deploy to GitHub Pages
+            code: npm run deploy
+
+    after-steps:
+        - wantedly/pretty-slack-notify:
+            webhook_url: $SLACK_WEBHOOK_URL
+            channel: $SLACK_CHANNEL
